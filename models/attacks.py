@@ -9,5 +9,5 @@ class Attacks(Base, table=True):
 
     wolf_id: int | None = Field(default=None, foreign_key="wolves.id")
     house_id: int | None = Field(default=None, foreign_key="houses.id")
-    success:  bool = Field(sa_column=Boolean(), default=True)
+    success:  bool = Field(sa_column=Boolean(), default=False)
     # SQLModel doesn't like booleans, but SQLAlchemy does
