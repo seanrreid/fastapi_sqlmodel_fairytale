@@ -1,5 +1,3 @@
-from sqlmodel import Field
-
 from .base import Base
 
 

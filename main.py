@@ -1,12 +1,11 @@
 import uvicorn
-from datetime import date
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import our tools
 # This is the database connection file
 from sqlmodel import Session, select, func, literal_column
-from db import get_session, init_db
+from db import get_session
 
 # These are our models
 from models.pigs import Pigs
@@ -105,5 +104,4 @@ async def add_pig(name: str, session: Session = Depends(get_session)):
 
 
 if __name__ == '__main__':
-    init_db()
     uvicorn.run('main:app', host='localhost', port=8000, reload=True)
