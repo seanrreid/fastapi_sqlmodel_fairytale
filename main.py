@@ -80,24 +80,24 @@ async def get_attacks(session: Session = Depends(get_session)):
 
 @app.post('/houses/add')
 async def add_house(pig_id: int, material: str, successfully_attacked: bool, session: Session = Depends(get_session)):
-    house = Houses(
+    new_house = Houses(
         pig_id=pig_id, material=material, successfully_attacked=successfully_attacked)
-    session.add(house)
+    session.add(new_house)
     session.commit()
     return {"message": "House added"}
 
 
 @app.post('/wolves/add')
-async def add_wolf(name: str, session: Session = Depends(get_session)):
-    wolf = Wolves(name=name)
-    session.add(wolf)
+async def add_wolf(wolf: Wolves, session: Session = Depends(get_session)):
+    new_wolf = Wolves(name=wolf.name)
+    session.add(new_wolf)
     session.commit()
     return {"Wolf Added": wolf.name}
 
 
 @app.post('/pigs/add')
-async def add_pig(name: str, session: Session = Depends(get_session)):
-    piglet = Pigs(name=name)
+async def add_pig(pig: Pigs, session: Session = Depends(get_session)):
+    piglet = Pigs(name=pig.name)
     session.add(piglet)
     session.commit()
     return {"Piglet Added": piglet.name}
