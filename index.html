@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Little Pig, Little Pig, let me in!</title>
+    <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
+  </head>
+  <body>
+    <h1>Three Little Pigs</h1>
+    <main>
+      <form id="addCharacter">
+        <label>
+          Character type?
+          <select name="character_type">
+            <option value="pigs">Pig</option>
+            <option value="wolves">Wolf</option>
+          </select>
+        </label>
+        <label>
+          Character Name?
+          <input type="text" name="character_name" placeholder="Pig Name" />
+        </label>
+        <button type="submit">Save Character</button>
+      </form>
+      <div id="characterList"></div>
+    </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM Ready');
+        const characterListEl = document.querySelector('#characterList');
+
+        fetchPigs(characterListEl);
+        fetchWolves(characterListEl);
+      });
+
+      const fetchPigs = async (parentEl) => {
+        const pigList = document.createElement('ul');
+        parentEl.appendChild(pigList);
+
+        const pigs = await fetch(`http://localhost:8000/pigs`).then(
+          (response) => response.json()
+        );
+
+        pigs.map((pig) => {
+          const pigItem = document.createElement('li');
+          pigItem.innerText = pig.name;
+          pigList.appendChild(pigItem);
+        });
+      };
+
+      const fetchWolves = async (parentEl) => {
+        const wolfList = document.createElement('ul');
+        if (!!parentEl) {
+          parentEl.appendChild(wolfList);
+        }
+
+        const wolves = await fetch(`http://localhost:8000/wolves`).then(
+          (response) => response.json()
+        );
+
+        wolves.map((wolf) => {
+          const wolfItem = document.createElement('li');
+          wolfItem.innerText = wolf.name;
+          wolfList.appendChild(wolfItem);
+        });
+      };
+
+      const adCharacterg = document.querySelector('#addCharacter');
+      addCharacter.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const characterName = formData.get('character_name');
+        const characterType = formData.get('character_type');
+        addToDB(characterType, characterName);
+      });
+
+      addToDB = async (type, name) => {
+        const response = await fetch(`http://localhost:8000/${type}/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name }),
+        });
+
+        console.log('response:', response.status);
+
+        if (response.status === 200) {
+          fetchPigs();
+          fetchWolves();
+        }
+      };
+    </script>
+  </body>
+</html>
